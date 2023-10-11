@@ -1,4 +1,7 @@
 node_modules
 node_modules/
 
-dist
+dist/createDirContent.js
+dist/createDirContent.js.map
+dist/index.js
+dist/index.js.map
