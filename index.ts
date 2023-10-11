@@ -5,6 +5,8 @@ import { dirname } from 'path';
 import inquirer from 'inquirer';
 import { fileURLToPath } from 'url';
 import createDirectorContents from './createDirContent.js';
+import { exec } from 'child_process';
+
 const CURR_DIR = process.cwd();
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -60,32 +62,43 @@ const QUESTIONS = [
 
 // Inquirer will ask the user to choose a project template and a project name.
 inquirer.prompt(QUESTIONS).then(answers => {
+  // ANSWERS FROM USER
   const projectChoice = answers['project-template'];
   const projectName = answers['project-name'];
   const alchemyAPI = answers['alchemy-api'];
   const etherscanAPI = answers['etherscan-api'];
   const walletConnectID = answers['walletconnect-id'];
+
+  // THE PATHS
   const templatePath = `${__dirname}/templates/${projectChoice}`;
   const newProjectPath = `${CURR_DIR}/${projectName}`;
-  const packageJsonPath = `${templatePath}/package.json`;
   const envFilePath = `${newProjectPath}/.env`;
 
-  console.log('Creating project...');
+  console.log('Creating your project...');
+
   // Create the directory for the new project.
   fs.mkdirSync(newProjectPath);
+
   // Create the directory contents.
   createDirectorContents(templatePath, projectName);
+
   // Change the current working directory to the project directory.
   process.chdir(newProjectPath);
-  // Read the existing package.json file.
-  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-  // Update the 'name' field with the user's project name.
-  packageJson.name = projectName;
-  // Write the updated package.json back to the file.
-  fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson));
+
+  // Initialize the project.
+  console.log('Installing dependencies...');
+
+  exec('npm install', (err, stdout, stderr) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log(stdout);
+    console.log(stderr);
+  });
 
   // Create the .env file with the environment variables.
-  console.log('Adding environment variables..');
+  console.log('Adding your environment variables..');
   fs.writeFileSync(
     envFilePath,
     `ALCHEMY_ID=${alchemyAPI}\nETHERSCAN_API=${etherscanAPI}\nWALLET_CONNECT_ID=${walletConnectID}`

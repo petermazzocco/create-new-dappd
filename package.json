@@ -11,15 +11,13 @@
   "bin": {
     "cli-prac": "./index.js"
   },
+  "private": false,
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "call-bind": "^1.0.2",
-    "connectkit": "^1.5.3",
-    "inquirer": "^9.2.11",
-    "viem": "^1.16.3",
-    "wagmi": "^1.4.3"
+    "inquirer": "^9.2.11"
   },
   "devDependencies": {
     "@babel/core": "^7.23.0",
