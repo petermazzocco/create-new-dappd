@@ -9,7 +9,7 @@
     "build": "tsc"
   },
   "bin": {
-    "cli-prac": "./dist/index.js"
+    "cli-prac": "./index.js"
   },
   "keywords": [],
   "author": "",
