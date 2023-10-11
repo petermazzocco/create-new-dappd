@@ -77,7 +77,7 @@ inquirer.prompt(QUESTIONS).then(answers => {
   console.log('Adding your environment variables..');
   fs.writeFileSync(
     envFilePath,
-    `ALCHEMY_ID="${alchemyAPI}"\nETHERSCAN_API="${etherscanAPI}"\nWALLET_CONNECT_ID="${walletConnectID}"`
+    `ALCHEMY_ID=${alchemyAPI}\nETHERSCAN_API=${etherscanAPI}\nWALLET_CONNECT_ID=${walletConnectID}`
   );
   // Initialize the project.
   console.log('Installing dependencies...');
