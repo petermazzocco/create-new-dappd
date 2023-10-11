@@ -16,7 +16,10 @@
   "license": "ISC",
   "dependencies": {
     "call-bind": "^1.0.2",
-    "inquirer": "^9.2.11"
+    "connectkit": "^1.5.3",
+    "inquirer": "^9.2.11",
+    "viem": "^1.16.3",
+    "wagmi": "^1.4.3"
   },
   "devDependencies": {
     "@babel/core": "^7.23.0",
