@@ -85,6 +85,13 @@ inquirer.prompt(QUESTIONS).then(answers => {
   // Change the current working directory to the project directory.
   process.chdir(newProjectPath);
 
+  // Create the .env file with the environment variables.
+  console.log('Adding your environment variables..');
+  fs.writeFileSync(
+    envFilePath,
+    `ALCHEMY_ID=${alchemyAPI}\nETHERSCAN_API=${etherscanAPI}\nWALLET_CONNECT_ID=${walletConnectID}`
+  );
+
   // Initialize the project.
   console.log('Installing dependencies...');
 
@@ -96,13 +103,4 @@ inquirer.prompt(QUESTIONS).then(answers => {
     console.log(stdout);
     console.log(stderr);
   });
-
-  // Create the .env file with the environment variables.
-  console.log('Adding your environment variables..');
-  fs.writeFileSync(
-    envFilePath,
-    `ALCHEMY_ID=${alchemyAPI}\nETHERSCAN_API=${etherscanAPI}\nWALLET_CONNECT_ID=${walletConnectID}`
-  );
-
-  console.log('Project created successfully!');
 });
