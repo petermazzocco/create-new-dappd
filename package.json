@@ -1,6 +1,7 @@
 {
-  "name": "cli-prac",
+  "name": "create-new-dappd",
   "version": "1.0.0",
+  "author": "Peter Mazzocco <petermazzocco@gmail.com.com>",
   "description": "",
   "main": "index.js",
   "type": "module",
@@ -11,10 +12,17 @@
   "bin": {
     "create-new-dappd": "./index.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/petermazzocco/create-new-dappd"
+  },
   "private": false,
   "keywords": [],
-  "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/petermazzocco/create-new-dappd/issues"
+  },
+  "homepage": "https://github.com/petermazzocco/create-new-dappd",
   "dependencies": {
     "@inquirer/checkbox": "^1.4.0",
     "@inquirer/confirm": "^2.0.14",
