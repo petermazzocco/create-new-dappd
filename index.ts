@@ -132,7 +132,8 @@ inquirer.prompt(QUESTIONS).then(answers => {
   const templatePath = `${__dirname}/templates/${projectChoice}`;
   const newProjectPath = `${CURR_DIR}/${projectName}`;
   const envFilePath = `${newProjectPath}/.env`;
-  const wagmiConfigPath = `${newProjectPath}/wagmi.config.ts`;
+  const wagmiConfigPath = `${newProjectPath}/src/wagmi.ts`;
+  const wagmiCliConfigPath = `${newProjectPath}/wagmi.config.ts`;
 
   // CREATING PROJECT
   console.log('Creating your project...');
@@ -148,7 +149,7 @@ inquirer.prompt(QUESTIONS).then(answers => {
     envFilePath,
     `ALCHEMY_ID=${alchemyAPI}\nETHERSCAN_API=${etherscanAPI}\nWALLET_CONNECT_ID=${walletConnectID}`
   );
-  // Initialize the project.
+  // // // Initialize the project.
   console.log('Installing dependencies...');
   const installPromise = new Promise((resolve, reject) => {
     exec('npm install', (err, stdout, stderr) => {
@@ -178,27 +179,50 @@ inquirer.prompt(QUESTIONS).then(answers => {
     fs.writeFileSync(
       wagmiConfigPath,
       `
-    import { defineConfig } from '@wagmi/cli'
-    import { etherscan, react } from '@wagmi/cli/plugins';
-    import { ${selectedNetwork} } from 'wagmi/chains'
-    export default defineConfig({
-      out: 'src/generated.ts',
-      plugins: [
-        etherscan({
-          apiKey: process.env.ETHERSCAN_API!,
-          chainId: ${selectedNetwork}.id,
-          contracts: [
-            {
-              name: '${ethContractName}',
-              address: {
-                [${selectedNetwork}.id]: '${ethContractAddr}',
-              },
-            },
-          ],
-        }),
-        react(),
+import { getDefaultConfig } from 'connectkit';
+import { createConfig } from 'wagmi';
+import { ${selectedNetwork} } from 'wagmi';
+
+const WC_ID = process.env.WALLET_CONNECT_ID as string;
+const walletConnectProjectId = WC_ID;
+const chains = [${selectedNetwork}];
+
+export const config = createConfig(
+  getDefaultConfig({
+    autoConnect: true,
+    appName: '${projectName}',
+    walletConnectProjectId,
+    chains,
+  })
+);
+`
+    );
+    fs.writeFileSync(
+      wagmiCliConfigPath,
+      `
+import { defineConfig } from '@wagmi/cli'
+import { etherscan, react } from '@wagmi/cli/plugins';
+import { ${selectedNetwork} } from 'wagmi/chains'
+
+export default defineConfig({
+  out: 'src/generated.ts',
+  plugins: [
+    etherscan({
+      apiKey: process.env.ETHERSCAN_API!,
+      chainId: ${selectedNetwork}.id,
+      contracts: [
+        {
+          name: '${ethContractName}',
+          address: {
+            [${selectedNetwork}.id]: '${ethContractAddr}',
+          },
+        },
       ],
-    })`
+    }),
+    react(),
+  ],
+});
+`
     );
     // Generate the types for the contract.
     console.log('Generating wagmi types...');
@@ -210,10 +234,6 @@ inquirer.prompt(QUESTIONS).then(answers => {
       console.log(stdout);
       console.log(stderr);
     });
-    // Final message
-    console.log(
-      `Project is ready!\n cd into ${projectName} and run npm run dev`
-    );
   });
 });
 //# sourceMappingURL=index.js.map

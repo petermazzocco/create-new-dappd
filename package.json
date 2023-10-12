@@ -9,7 +9,7 @@
     "build": "tsc"
   },
   "bin": {
-    "cli-prac": "./index.js"
+    "create-new-dappd": "./index.js"
   },
   "private": false,
   "keywords": [],
