@@ -55,7 +55,7 @@ inquirer
     {
       name: 'project-template',
       type: 'list',
-      message: 'What wallet would you like to use?',
+      message: 'Which template would you like to use?',
       choices: CHOICES,
     },
     {
