@@ -6,7 +6,7 @@ import { useAccount } from 'wagmi';
 export default function Home() {
   const { isConnected } = useAccount();
   return (
-    <main className="grid justify-center place-items-center align-middle space-y-4  p-24">
+    <main className="grid justify-center h-96 place-items-center align-middle space-y-4  p-24">
       {isConnected ? (
         <div className="rounded-xl bg-base-300 shadow-xl p-10 space-y-8 grid max-w-lg text-center">
           <h2 className="text-lg font-bold">
@@ -27,7 +27,7 @@ export default function Home() {
           <p>Happy Coding!</p>
         </div>
       ) : (
-        <div className="rounded-xl bg-base-300 shadow-xl grid justify-center p-10 space-y-8 place-items-center max-w-lg text-center">
+        <div className="rounded-xl bg-base-300 h-96 shadow-xl grid justify-center p-10 space-y-8 place-items-center max-w-lg text-center">
           <h2>Let's Begin By Connecting Your Wallet:</h2>
           <ConnectKitButton />
         </div>

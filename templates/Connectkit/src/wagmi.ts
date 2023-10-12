@@ -8,7 +8,7 @@ const chains = [mainnet];
 
 export const config = createConfig(
   getDefaultConfig({
-    autoConnect: true,
+    autoConnect: false, //Change to true if you want to autoconnect
     appName: '',
     walletConnectProjectId,
     chains,

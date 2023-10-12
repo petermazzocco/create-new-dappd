@@ -21,7 +21,7 @@ export default function ThemeSwitcher() {
       {theme === 'dark' ? (
         <button
           className="btn btn-circle btn-ghost "
-          onClick={() => setTheme('light')}
+          onClick={() => setTheme('lofi')}
         >
           <Sun className="h-4 w-4 cursor-pointer" />
         </button>
