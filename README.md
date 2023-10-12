@@ -13,7 +13,7 @@ To create a new Dapp project, follow these steps:
 
 1. Make sure you have Node.js installed on your system. If not, you can download it from [Node.js website](https://nodejs.org/).
 
-2. Open your terminal and run the following command:
+2. Open your terminal, navigate to whatever folder you want, and run the following command:
 
    ```sh
    npx create-new-dappd
@@ -21,42 +21,50 @@ To create a new Dapp project, follow these steps:
 
    The script will guide you through a series of prompts to set up your project. Here's what you can expect:
 
-- **Select the networks:** Choose the blockchain networks you want to support (e.g., mainnet, polygon, optimism, etc.).
+- **Select the networks:** Choose the blockchain networks you want to support (e.g., mainnet, polygon, optimism, and more to come.).
 
-- **Project template:** Select a template for your Dapp project. Available choices are:
+- **Wallets:** Select a wallet for your Dapp project. Available choices are:
 
-  - [Template 1]: A brief description of the first template.
-  - [Template 2]: A brief description of the second template.
-  - [Template 3]: A brief description of the third template.
-  - ...
+  - [Connectkit]: A Nextjs template using [Connectkit] (https://docs.family.co/connectkit/), Tailwind, Typescript and wagmi/viem.
+  - [Rainbowkit]: A Nextjs template using [Rainbowkit] (https://www.rainbowkit.com/), Tailwind, Typescript and wagmi/viem.
 
 - **Project name:** Enter a name for your project. The name can only include letters, numbers, underscores, and hyphens.
 
-- **Alchemy API key:** Enter your Alchemy API key. This key is required for blockchain data access.
+- **Alchemy API key:** Enter your Alchemy API key. This key is required for blockchain data access (You can navigate to the [Alchemy] (https://www.alchemy.com/) website for an API key.).
 
-- **Etherscan API key:** Enter your Etherscan API key. This key is used for contract verification and monitoring.
+- **Etherscan API key:** Enter your Etherscan API key. This key is used for the wagmi CLI (You can navigate to the [Etherscan] (https://etherscan.io/) website for an API key.).
 
-- **WalletConnect ID:** Enter your WalletConnect ID. This is needed for wallet connectivity.
+- **WalletConnect ID:** Enter your WalletConnect ID. This is needed for wallet connectivity (You can navigate to the [Walletconnect] (https://walletconnect.com//) website for an ID.).
 
-- **Contract name:** Enter the name of the deployed smart contract.
+- **Contract name:** Enter the name of the deployed smart contract (Please use the name of the actual contract).
 
-- **Contract address:** Enter the address of the deployed smart contract.
+- **Contract address:** Enter the address of the deployed smart contract (Please verify the contract address is correct).
 
-- **Contract network:** Choose the network on which the contract is deployed (selected from the networks you chose earlier).
+- **Contract network:** Choose the network on which the contract is deployed. This will allow you to choose from the selected from the networks you chose earlier.
 
 The script will create your project, install dependencies, and set up the necessary configuration files.
 
+The wagmi CLI will autogenerate React hooks based off your contracts read and write functions! Read more about the [wagmi CLI] (https://wagmi.sh/cli/getting-started)
+
 Once the setup is complete, you can start working on your Dapp project using the selected template.
+
+To start your local server, run the following command:
+
+```sh
+npm run dev
+```
+
+If for some reason you see a blank page, just refresh your browser and the components will populate.
 
 ## Additional Information
 
-- To customize your Dapp further, you can edit the environment variables in the generated `.env` file.
+- You can edit the environment variables in the generated `.env` file at any time.
 
-- Configuration for the Wagmi CLI and Wagmi types generation is also automatically set up for you.
+- You are able to add additional contracts within the `src/generated.ts` file. Just follow the wagmi CLI instructions for adding additional contracts.
 
 ## Support and Issues
 
-If you encounter any issues or have questions, feel free to reach out for assistance. Happy coding!
+If you encounter any issues or have questions, feel free to reach out for assistance or open an issue.
 
 ## License
 
