@@ -180,7 +180,7 @@ inquirer
     installPromise.then(() => {
         // Initialize the wagmi cli
         console.log('Initializing wagmi cli...');
-        exec('sudo npx wagmi init', (err, stdout, stderr) => {
+        exec('npx wagmi init', (err, stdout, stderr) => {
             if (err) {
                 console.error(err);
                 return;
@@ -193,7 +193,7 @@ inquirer
         fs.writeFileSync(wagmiConfigPath, `
 import { getDefaultConfig } from 'connectkit';
 import { createConfig } from 'wagmi';
-import { ${selectedNetworks} } from 'wagmi';
+import { ${selectedNetworks} } from 'wagmi/chains';
 
 const WC_ID = process.env.WALLET_CONNECT_ID as string;
 const walletConnectProjectId = WC_ID;
@@ -234,7 +234,7 @@ export default defineConfig({
         fs.writeFileSync(wagmiCliConfigPath, wagmiCliConfig);
         // Generate the types for the contract.
         console.log('Generating wagmi types...');
-        exec('sudo npx wagmi generate', (err, stdout, stderr) => {
+        exec('npx wagmi generate', (err, stdout, stderr) => {
             if (err) {
                 console.error(err);
                 return;

@@ -177,7 +177,7 @@ inquirer
     installPromise.then(() => {
       // Initialize the wagmi cli
       console.log('Initializing wagmi cli...');
-      exec('sudo npx wagmi init', (err, stdout, stderr) => {
+      exec('npx wagmi init', (err, stdout, stderr) => {
         if (err) {
           console.error(err);
           return;
@@ -236,7 +236,7 @@ export default defineConfig({
       fs.writeFileSync(wagmiCliConfigPath, wagmiCliConfig);
       // Generate the types for the contract.
       console.log('Generating wagmi types...');
-      exec('sudo npx wagmi generate', (err, stdout, stderr) => {
+      exec('npx wagmi generate', (err, stdout, stderr) => {
         if (err) {
           console.error(err);
           return;
