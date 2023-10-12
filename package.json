@@ -1,8 +1,8 @@
 {
   "name": "create-new-dappd",
   "version": "1.0.0",
-  "author": "Peter Mazzocco <petermazzocco@gmail.com.com>",
-  "description": "",
+  "author": "Peter Mazzocco",
+  "description": "An easy way to create a new dapp project with a deployed smart contract.",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -17,7 +17,11 @@
     "url": "https://github.com/petermazzocco/create-new-dappd"
   },
   "private": false,
-  "keywords": [],
+  "keywords": [
+    "CND",
+    "create-new-dappd",
+    "dappd"
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/petermazzocco/create-new-dappd/issues"
