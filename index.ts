@@ -56,7 +56,7 @@ const QUESTIONS: Question[] = [
   {
     name: 'project-template',
     type: 'list',
-    message: 'What project template would you like to generate?',
+    message: 'What wallet would you like to use?',
     choices: CHOICES,
   },
 
