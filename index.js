@@ -50,7 +50,7 @@ inquirer
     {
         name: 'project-template',
         type: 'list',
-        message: 'What wallet would you like to use?',
+        message: 'Which template would you like to use?',
         choices: CHOICES,
     },
     {
@@ -161,7 +161,7 @@ inquirer
     process.chdir(newProjectPath);
     // Create the .env file with the environment variables.
     console.log('Adding your environment variables..');
-    fs.writeFileSync(envFilePath, `ALCHEMY_ID=${alchemyAPI}\nETHERSCAN_API=${etherscanAPI}\nWALLET_CONNECT_ID=${walletConnectID}`);
+    fs.writeFileSync(envFilePath, `ALCHEMY_ID="${alchemyAPI}"\nETHERSCAN_API="${etherscanAPI}"\nWALLET_CONNECT_ID="${walletConnectID}"`);
     // // // Initialize the project.
     console.log('Installing dependencies...');
     const installPromise = new Promise((resolve, reject) => {
@@ -178,19 +178,19 @@ inquirer
         });
     });
     installPromise.then(() => {
-        // Initialize the wagmi cli
-        console.log('Initializing wagmi cli...');
-        exec('npx wagmi init', (err, stdout, stderr) => {
-            if (err) {
-                console.error(err);
-                return;
-            }
-            console.log(stdout);
-            console.log(stderr);
-        });
-        // Enter the contract address and name into the wagmi config.
-        console.log('Creating wagmi config...');
-        fs.writeFileSync(wagmiConfigPath, `
+        // If the user selected the starter template:
+        if (projectChoice === 'starter') {
+            // Code for the 'starter' case
+            console.log('Initializing wagmi cli...');
+            exec('npx wagmi init', (err, stdout, stderr) => {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+                console.log(stdout);
+                console.log(stderr);
+                console.log('Creating wagmi config...');
+                fs.writeFileSync(wagmiConfigPath, `
 import { getDefaultConfig } from 'connectkit';
 import { createConfig } from 'wagmi';
 import { ${selectedNetworks} } from 'wagmi/chains';
@@ -208,7 +208,7 @@ export const config = createConfig(
   })
 );
 `);
-        const wagmiCliConfig = `
+                const wagmiCliConfig = `
 import { defineConfig } from '@wagmi/cli'
 import { etherscan, react } from '@wagmi/cli/plugins';
 import { ${selectedNetworks} } from 'wagmi/chains'
@@ -231,17 +231,115 @@ export default defineConfig({
     react(),
   ],
 })`;
-        fs.writeFileSync(wagmiCliConfigPath, wagmiCliConfig);
-        // Generate the types for the contract.
-        console.log('Generating wagmi types...');
-        exec('npx wagmi generate', (err, stdout, stderr) => {
-            if (err) {
-                console.error(err);
-                return;
-            }
-            console.log(stdout);
-            console.log(stderr);
-        });
+                fs.writeFileSync(wagmiCliConfigPath, wagmiCliConfig);
+                console.log('Generating wagmi hooks...');
+                exec('npx wagmi generate', (err, stdout, stderr) => {
+                    if (err) {
+                        console.error(err);
+                        return;
+                    }
+                    console.log(stdout);
+                    console.log(stderr);
+                });
+            });
+            // If the user selected the erc20 template:
+        }
+        else if (projectChoice === 'erc20') {
+            const tokenInfoComponentPath = `${newProjectPath}/src/app/components/TokenInfo.tsx`;
+            console.log('Creating wagmi config...');
+            fs.writeFileSync(wagmiConfigPath, `
+import { getDefaultConfig } from 'connectkit';
+import { createConfig } from 'wagmi';
+import { ${selectedNetworks} } from 'wagmi/chains';
+
+const WC_ID = process.env.WALLET_CONNECT_ID as string;
+const walletConnectProjectId = WC_ID;
+const chains = [${selectedNetworks}];
+
+export const config = createConfig(
+  getDefaultConfig({
+    autoConnect: true,
+    appName: '${projectName}',
+    walletConnectProjectId,
+    chains,
+  })
+);
+`);
+            const wagmiCliConfig = `
+import { defineConfig } from '@wagmi/cli'
+import { etherscan, react } from '@wagmi/cli/plugins';
+import { erc20ABI } from 'wagmi';
+import { ${selectedNetworks} } from 'wagmi/chains'
+
+export default defineConfig({
+  out: 'src/generated.ts',
+  contracts: [
+    {
+      name: 'erc20',
+      abi: erc20ABI,
+    },
+  ],
+  plugins: [
+    etherscan({
+      apiKey: process.env.ETHERSCAN_API!,
+      chainId: ${contractNetwork}.id,
+      contracts: [
+        {
+          name: '${contractName}',
+          address: {
+            [${contractNetwork}.id]: '${contractAddr}',
+          },
+        },
+      ],
+    }),
+    react(),
+  ],
+})`;
+            fs.writeFileSync(wagmiCliConfigPath, wagmiCliConfig);
+            console.log('Generating wagmi ERC20 hooks...');
+            exec('npx wagmi generate', (err, stdout, stderr) => {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+                console.log(stdout);
+                console.log(stderr);
+            });
+            const tokenInfoComponent = `
+'use client';
+
+import {
+  use${contractName}Symbol,
+  use${contractName}Name,
+  use${contractName}TotalSupply,
+} from '@src/generated';
+
+export default function TokenInfo() {
+  const { data: symbol } = use${contractName}Symbol();
+  const { data: name } = use${contractName}Name();
+  const { data: totalSupply } = use${contractName}TotalSupply();
+
+  const totalSupplyWeiToEth = totalSupply
+    ? (Number(totalSupply) / 10 ** 18).toFixed(2)
+    : null;
+
+  return (
+    <div className="bg-base-3 00 p-8 rounded-lg grid justify-center space-y-4">
+      <p className=" border-2 border-orange-400 rounded-xl p-2 hover:bg-orange-400">
+        {name}({symbol})
+      </p>
+      <p className=" border-2 border-orange-400 rounded-xl p-2 hover:bg-orange-400">
+        Total Supply: {totalSupplyWeiToEth?.toString()}
+      </p>
+    </div>
+  );
+}`;
+            console.log('Creating Token info component...');
+            fs.writeFileSync(tokenInfoComponentPath, tokenInfoComponent);
+        }
+        else {
+            // Code to run if neither of the conditions is met
+        }
     });
 })
     .catch(err => {
