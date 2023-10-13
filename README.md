@@ -23,10 +23,10 @@ To create a new Dapp project, follow these steps:
 
 - **Select the networks:** Choose the blockchain networks you want to support (e.g., mainnet, polygon, optimism, and more to come.).
 
-- **Wallets:** Select a wallet for your Dapp project. Available choices are:
+- **Template:** Select a template for your Dapp project. Available choices are:
 
-  - [Connectkit]: A Nextjs template using [Connectkit] (https://docs.family.co/connectkit/), Tailwind, Typescript and wagmi/viem.
-  - [Rainbowkit]: A Nextjs template using [Rainbowkit] (https://www.rainbowkit.com/), Tailwind, Typescript and wagmi/viem.
+  - [erc20]: Add yours or any other ERC20 compatible contract address and name, and it will autogenerate hooks based off the ABI and display token info initially.
+  - [starter]: The simple basic template tht allows you to add any form of contract.
 
 - **Project name:** Enter a name for your project. The name can only include letters, numbers, underscores, and hyphens.
 
