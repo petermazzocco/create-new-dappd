@@ -3,6 +3,7 @@
 import { ConnectKitButton } from 'connectkit';
 import { useAccount } from 'wagmi';
 import TokenInfo from './components/TokenInfo';
+import Transfer from './components/Transfer';
 import { GithubIcon, TwitterIcon } from 'lucide-react';
 
 export default function Home() {
@@ -31,7 +32,8 @@ export default function Home() {
               <div className="space-y-3">
                 <p className="text-lg font-semibold">Your ERC20 Token Info:</p>
                 <TokenInfo />
-                <p className="text-xs">Try now to create a write function!</p>
+                <p className="text-sm">Send some tokens to someone:</p>
+                <Transfer />
               </div>
             </div>
             <div className="space-y-2 grid">

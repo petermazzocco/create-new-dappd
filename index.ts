@@ -249,6 +249,7 @@ export default defineConfig({
         // If the user selected the erc20 template:
       } else if (projectChoice === 'erc20') {
         const tokenInfoComponentPath = `${newProjectPath}/src/app/components/TokenInfo.tsx`;
+        const tokenTransferComponentPath = `${newProjectPath}/src/app/components/Transfer.tsx`;
         console.log('Creating wagmi config...');
         fs.writeFileSync(
           wagmiConfigPath,
@@ -342,8 +343,67 @@ export default function TokenInfo() {
     </div>
   );
 }`;
-        console.log('Creating Token info component...');
+
+        const tokenTransferComponent = `
+'use client';
+
+import {
+  use${contractName}Transfer,
+  usePrepare${contractName}Transfer,
+} from '@src/generated';
+import type { Address } from 'viem';
+import { useState } from 'react';
+
+export default function Transfer() {
+  const [toAddr, setToAddr] = useState<Address>();
+  const [amount, setAmount] = useState<number>(0);
+  const handleAmount = e => {
+    const ethAmount = Number(e.target.value);
+    const weiAmount = ethAmount * 1e18;
+
+    setAmount(weiAmount);
+  };
+
+  const { config } = usePrepareTestTokenTransfer({
+    args: [toAddr, amount],
+  });
+  const { write, isError, isSuccess, isLoading } =
+    useTestTokenTransfer(config);
+
+  return (
+    <div className="grid justify-center space-y-4">
+      <input
+        className="input-sm p-4"
+        placeholder="Address"
+        type="text"
+        onChange={e => {
+          setToAddr(e.target.value as Address);
+        }}
+      />
+      <input
+        className="input-sm p-4"
+        placeholder="Amount"
+        type="number"
+        onChange={handleAmount}
+      />
+      <button
+        type="button"
+        disabled={!write}
+        className="btn btn-sm btn-neutral"
+        onClick={() => write?.()}
+      >
+        Transfer Tokens
+      </button>
+      {isError && <div className="text-red-500">Error Occurred</div>}
+      {isSuccess && <div className="text-green-500">Success</div>}
+    </div>
+  );
+}`;
+        console.log('Creating token info component...');
         fs.writeFileSync(tokenInfoComponentPath, tokenInfoComponent);
+        console.log('Creating token transfer component...');
+        fs.writeFileSync(tokenTransferComponentPath, tokenTransferComponent);
+        console.log('Your decentralized app is ready!');
       } else {
         // Code to run if neither of the conditions is met
       }
