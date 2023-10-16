@@ -8,8 +8,9 @@ import Footer from './components/Footer';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Easy Dapp: ERC20',
-  description: 'An ERC20 template with Next.js and ConnectKit',
+  title: 'Easy Dapp: ERC721',
+  description:
+    'A simple ERC721 minting page using Next.js, Tailwind, Typescript, Wagmi and ConnectKit',
 };
 
 export default function RootLayout({
