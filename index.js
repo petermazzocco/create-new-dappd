@@ -396,6 +396,164 @@ export default function Transfer() {
             fs.writeFileSync(tokenTransferComponentPath, tokenTransferComponent);
             console.log('Your decentralized app is ready!');
         }
+        else if (projectChoice === 'erc721') {
+            const nftComponentPath = `${newProjectPath}/src/app/components/NFTInfo.tsx`;
+            const nftMintComponentPath = `${newProjectPath}/src/app/components/Mint.tsx`;
+            console.log('Creating wagmi config...');
+            fs.writeFileSync(wagmiConfigPath, `
+import { getDefaultConfig } from 'connectkit';
+import { createConfig } from 'wagmi';
+import { ${selectedNetworks} } from 'wagmi/chains';
+
+const WC_ID = process.env.WALLET_CONNECT_ID as string;
+const walletConnectProjectId = WC_ID;
+const chains = [${selectedNetworks}];
+
+export const config = createConfig(
+  getDefaultConfig({
+    autoConnect: true,
+    appName: '${projectName}',
+    walletConnectProjectId,
+    chains,
+  })
+);
+`);
+            const wagmiCliConfig = `
+import { defineConfig } from '@wagmi/cli'
+import { etherscan, react } from '@wagmi/cli/plugins';
+import { erc20ABI } from 'wagmi';
+import { ${selectedNetworks} } from 'wagmi/chains'
+
+export default defineConfig({
+  out: 'src/generated.ts',
+  plugins: [
+    etherscan({
+      apiKey: process.env.ETHERSCAN_API!,
+      chainId: ${contractNetwork}.id,
+      contracts: [
+        {
+          name: '${contractName}',
+          address: {
+            [${contractNetwork}.id]: '${contractAddr}',
+          },
+        },
+      ],
+    }),
+    react(),
+  ],
+})`;
+            fs.writeFileSync(wagmiCliConfigPath, wagmiCliConfig);
+            console.log('Generating wagmi ERC20 hooks...');
+            exec('npx wagmi generate', (err, stdout, stderr) => {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+                console.log(stdout);
+                console.log(stderr);
+            });
+            const nftMintComponent = `
+'use client';
+
+/**
+ * If you are experiencing an error with the import, it might be because your "mint" function is
+ * named something other than "mint". Please double check and change the name of the function
+ * if this is the case.
+ */
+import { use${contractName}Mint, usePrepare${contractName}Mint } from '@src/generated';
+import { Toaster, toast } from 'sonner';
+
+export default function Mint() {
+  const { config } = use${contractName}Mint({
+    // REPLACE WITH YOUR ARGUMENTS
+    // If no arguments, you can remove.
+    args: ['0.01', '0x56C33325b71d97951C85397E1Bf32aF3bB45f74a', 1],
+  });
+  const {
+    write: mint,
+    isSuccess: minted,
+    isLoading: minting,
+    isError: failedMint,
+  } = use${contractName}Mint(config);
+  return (
+    <div className="w-full">
+      <Toaster richColors />
+      <button
+        onClick={() => mint?.()}
+        type="button"
+        //The button will be disabled if the arguments are incorrect.
+        disabled={!mint}
+        className="btn btn-sm btn-accent w-full"
+      >
+        Mint
+      </button>
+      {minting && toast('Minting...')}
+      {minted && toast.success('Minted!')}
+      {failedMint && toast.error('Failed to mint')}
+    </div>
+  );
+}`;
+            const nftInfoComponent = `
+'use client';
+
+import Mint from './Mint';
+import Socials from './Socials';
+/**
+ * Symbol and name are standard ERC721 metadata fields
+ * If you are experiencing import errors, it might be because the contract you are using
+ * does not have these fields or changed the variable name.
+ * You can remove the import or update the import and the fields if this is the case.
+ */
+import { use${contractName}Symbol, use${contractName}Name } from '@src/generated';
+
+export default function NFTInfo() {
+  const { data: symbol } = use${contractName}Symbol();
+  const { data: name } = use${contractName}Name();
+  return (
+    <div className="grid mx-10">
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-10 h-fit">
+        <div className="col-span-1 justify-center place-items-center align-middle grid space-y-4">
+          <div className="bg-primary w-96 h-96 rounded-md place-items-center grid-flow-col justify-center grid">
+            {/**
+             * Add your image source here
+             * <img src={""} className="w-full h-full rounded-md" />
+             * */}
+            <p className="text-center">Add NFT Here</p>
+          </div>
+          <Mint />
+        </div>
+        <div className="col-span-1 justify-start text-white  align-middle space-y-4">
+          <h2 className=" text-3xl font-black">
+            {name} <span className="font-thin text-lg ml-3">{symbol}</span>
+          </h2>
+          <hr className="border-1 border-white border-opacity-60" />
+          <p className="text-xl font-semibold">0.00 ETH</p>
+          <p className=" text-md font-thin">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat. Duis aute irure dolor in
+            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+            culpa qui officia deserunt mollit anim id est laborum.
+          </p>
+          <p className="text-lg">Total Supply: 10,0000</p>
+          <hr className="border-1 border-white border-opacity-60" />
+          <div className="pt-18">
+            <Socials />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+`;
+            console.log('Creating token info component...');
+            fs.writeFileSync(nftComponentPath, nftInfoComponent);
+            console.log('Creating token transfer component...');
+            fs.writeFileSync(nftMintComponentPath, nftMintComponent);
+            console.log('Your decentralized app is ready!');
+        }
         else {
             // Code to run if neither of the conditions is met
         }
