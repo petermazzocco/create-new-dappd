@@ -13,12 +13,31 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const CHOICES = fs.readdirSync(`${__dirname}/templates`);
 
 // Add a greeting message
-console.log(
-  'Welcome to create-new-dappd!\n\nThe easiest way to create a new decentralized application.\n\nThese templates require the following: A deployed smart contract, an Alchemy API key, an Etherscan API key, and a WalletConnect ID.\n\nFrom that, it will initialize a new template project with the necessary dependencies, environment variables, and create ready to use React Hooks based from wagmi.\n\n'
-);
+console.log(`
+    ____  ___    ____  ____  ____ 
+   / __ \\/   |  / __ \\/ __ \\/ __ \\
+  / / / / /| | / /_/ / /_/ / / / /
+ / /_/ / ___ |/ ____/ ____/ /_/ / 
+/_____/_/  |_/_/   /_/   /_____/  
+
+Welcome to create-new-dappd!
+
+The easiest way to create a new decentralized application.
+
+Vist the repo for more information:
+https://www.github.com/petermazzocco/create-new-dappd
+
+These templates require the following:
+-- A deployed smart contract
+-- An Alchemy and Etherscan API Key
+-- A WalletConnect ID
+
+From that, it will initialize a new template project of your choice with the necessary dependencies, environment variables, and ready-to-use React Hooks based from wagmi.
+`);
+
 await confirm({
   message:
-    'Before you start, do you have all necessary prerequisites from above?',
+    'Before you start, do you have all necessary prerequisites listed above?',
 });
 // Ask the user to select a network.
 const selectedNetworks = await checkbox({
@@ -29,34 +48,34 @@ const selectedNetworks = await checkbox({
       name: 'Mainnet',
       value: 'mainnet',
     },
-    {
-      name: 'Polygon',
-      value: 'matic',
-    },
-    {
-      name: 'Optimism',
-      value: 'optimism',
-    },
-    {
-      name: 'Arbitrum',
-      value: 'arbitrum',
-    },
-    {
-      name: 'Base',
-      value: 'base',
-    },
-    {
-      name: 'Zora',
-      value: 'zora',
-    },
-    {
-      name: 'Gnosis',
-      value: 'gnosis',
-    },
-    {
-      name: 'Binance Smart Chain',
-      value: 'bsc',
-    },
+    // {
+    //   name: 'Polygon',
+    //   value: 'matic',
+    // },
+    // {
+    //   name: 'Optimism',
+    //   value: 'optimism',
+    // },
+    // {
+    //   name: 'Arbitrum',
+    //   value: 'arbitrum',
+    // },
+    // {
+    //   name: 'Base',
+    //   value: 'base',
+    // },
+    // {
+    //   name: 'Zora',
+    //   value: 'zora',
+    // },
+    // {
+    //   name: 'Gnosis',
+    //   value: 'gnosis',
+    // },
+    // {
+    //   name: 'Binance Smart Chain',
+    //   value: 'bsc',
+    // },
     new Separator(),
     {
       name: 'Sepolia',
@@ -66,34 +85,34 @@ const selectedNetworks = await checkbox({
       name: 'Goerli',
       value: 'goerli',
     },
-    {
-      name: 'Mumbai',
-      value: 'mumbai',
-    },
-    {
-      name: 'Optimism Sepolia',
-      value: 'optimismSepolia',
-    },
-    {
-      name: 'Arbitrum Sepolia',
-      value: 'arbitrumSepolia',
-    },
-    {
-      name: 'Base Sepolia',
-      value: 'baseSepolia',
-    },
-    {
-      name: 'Zora Testnet',
-      value: 'zoraTestnet',
-    },
-    {
-      name: 'Gnosis Chiado',
-      value: 'gnosisChiado',
-    },
-    {
-      name: 'Binance Testnet',
-      value: 'bscTestnet',
-    },
+    // {
+    //   name: 'Mumbai',
+    //   value: 'mumbai',
+    // },
+    // {
+    //   name: 'Optimism Sepolia',
+    //   value: 'optimismSepolia',
+    // },
+    // {
+    //   name: 'Arbitrum Sepolia',
+    //   value: 'arbitrumSepolia',
+    // },
+    // {
+    //   name: 'Base Sepolia',
+    //   value: 'baseSepolia',
+    // },
+    // {
+    //   name: 'Zora Testnet',
+    //   value: 'zoraTestnet',
+    // },
+    // {
+    //   name: 'Gnosis Chiado',
+    //   value: 'gnosisChiado',
+    // },
+    // {
+    //   name: 'Binance Testnet',
+    //   value: 'bscTestnet',
+    // },
   ],
 });
 
@@ -166,13 +185,6 @@ inquirer
       type: 'list',
       message: 'Which network is this contract deployed on?',
       choices: selectedNetworks,
-      validate: function (input) {
-        if (input.length > 0) {
-          return true;
-        } else {
-          return 'Please select the network.';
-        }
-      },
     },
   ])
   .then(answers => {
@@ -223,7 +235,6 @@ inquirer
         }
       });
     });
-    console.log('Dependencies have been installed.');
     installPromise.then(() => {
       // If the user selected the starter template:
       if (projectChoice === 'starter') {
