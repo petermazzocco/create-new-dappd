@@ -24,10 +24,9 @@ To create a new Dapp project, follow these steps:
 - **Select the networks:** Choose the blockchain networks you want to support (e.g., mainnet, polygon, optimism, and more to come.).
 
 - **Template:** Select a template for your Dapp project. Available choices are:
-
-  - [erc20]: Add yours or any other ERC20 compatible contract address and name, and it will autogenerate hooks based off the ABI and display token info initially.
-  - [erc721]: A simple minting page that is pre-configured to all you to mint your deployed ERC721 token. Of Note: the functions of the template follow the OpenZeppelin standard.
-  - [starter]: The simple basic template tht allows you to add any form of contract.
+  - [CUSTOM]: RECOMMENDED. The simple basic template tht allows you to add any form of contract.
+  - [ERC20]: Add yours or any other ERC20 compatible contract address and name, and it will autogenerate hooks based off the ABI and display token info initially.
+  - [ERC721]: A simple minting page that is pre-configured to all you to mint your deployed ERC721 token. Of Note: the functions of the template follow the OpenZeppelin standard.
 
 - **Project name:** Enter a name for your project. The name can only include letters, numbers, underscores, and hyphens.
 
