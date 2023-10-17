@@ -14,36 +14,40 @@ const CHOICES = fs.readdirSync(`${__dirname}/templates`);
 
 // Add a greeting message
 console.log(
-  'Welcome to create-new-dappd!\n The easiest way to create a new dappd project.\n This CLI requires a deployed smart contract, an Alchemy API key, an Etherscan API key, and a WalletConnect ID. From that, it will initialize a new project with the necessary dependencies, environment variables, and create ready to use React Hooks based from wagmi.'
+  'Welcome to create-new-dappd!\n The easiest way to create a new decentralized application.\n These templates require the following: A deployed smart contract, an Alchemy API key, an Etherscan API key, and a WalletConnect ID.\nFrom that, it will initialize a new template project with the necessary dependencies, environment variables, and create ready to use React Hooks based from wagmi.\n'
 );
-await confirm({ message: 'Ready To Create A New Dappd?' });
+await confirm({
+  message:
+    'Before you start, do you have all necessary prerequisites from above?',
+});
 // Ask the user to select a network.
 const selectedNetworks = await checkbox({
-  message: 'To start, select the networks you want to use:',
+  message:
+    'To start, select the networks you plan to use (Select as many as you like):',
   choices: [
     {
-      name: 'mainnet',
+      name: 'Mainnet',
       value: 'mainnet',
     },
     {
-      name: 'polygon',
+      name: 'Polygon',
       value: 'matic',
     },
     {
-      name: 'optimism',
+      name: 'Optimism',
       value: 'optimism',
     },
     new Separator(),
     {
-      name: 'sepolia',
+      name: 'Sepolia',
       value: 'sepolia',
     },
     {
-      name: 'goerli',
+      name: 'Goerli',
       value: 'goerli',
     },
     {
-      name: 'mumbai',
+      name: 'Mumbai',
       value: 'mumbai',
     },
   ],
@@ -61,7 +65,7 @@ inquirer
     {
       name: 'project-name',
       type: 'input',
-      message: 'Project name:',
+      message: 'What is the project name:',
       validate: function (input) {
         if (/^([A-Za-z\-\\_\d])+$/.test(input)) return true;
         else
@@ -71,7 +75,7 @@ inquirer
     {
       name: 'alchemy-api',
       type: 'password',
-      message: `Enter your Alchemy API:`,
+      message: `Enter an Alchemy API (this is hidden):`,
       validate: function (input) {
         if (/^([A-Za-z\-\\_\d])+$/.test(input)) return true;
         else return 'API key may only include letters and numbers.';
@@ -80,7 +84,7 @@ inquirer
     {
       name: 'etherscan-api',
       type: 'password',
-      message: `Enter your Etherscan API:`,
+      message: `Enter an Etherscan API (this is hidden):`,
       validate: function (input) {
         if (/^([A-Za-z\-\\_\d])+$/.test(input)) return true;
         else return 'API key may only include letters and numbers.';
@@ -89,7 +93,7 @@ inquirer
     {
       name: 'walletconnect-id',
       type: 'password',
-      message: `Enter your WallectConnect ID:`,
+      message: `Enter your WallectConnect ID (this is hidden):`,
       validate: function (input) {
         if (/^([A-Za-z\-\\_\d])+$/.test(input)) return true;
         else return 'ID key may only include letters and numbers.';
@@ -98,7 +102,7 @@ inquirer
     {
       name: 'contract-name',
       type: 'input',
-      message: 'Enter a contract name:',
+      message: 'Enter the contract name:',
       validate: function (input) {
         if (/^([A-Za-z\-\\_\d])+$/.test(input)) return true;
         else return 'Name may only include letters and numbers.';
@@ -107,16 +111,16 @@ inquirer
     {
       name: 'contract-addr',
       type: 'input',
-      message: 'Enter a contract address:',
+      message: 'Enter the contract address:',
       validate: function (input) {
-        if (/^([A-Za-z\-\\_\d])+$/.test(input)) return true;
-        else return 'Name may only include letters and numbers.';
+        if (/^0x[a-fA-F0-9]{40}$/.test(input)) return true;
+        else return 'Please enter a valid Ethereum address.';
       },
     },
     {
       name: `contract-network`,
       type: 'list',
-      message: 'What network is this contract deployed on?',
+      message: 'Which network is this contract deployed on?',
       choices: selectedNetworks,
       validate: function (input) {
         if (input.length > 0) {
@@ -155,11 +159,12 @@ inquirer
     // Change the current working directory to the project directory.
     process.chdir(newProjectPath);
     // Create the .env file with the environment variables.
-    console.log('Adding your environment variables..');
+    console.log('Adding your environment variables...');
     fs.writeFileSync(
       envFilePath,
       `ALCHEMY_ID="${alchemyAPI}"\nETHERSCAN_API="${etherscanAPI}"\nWALLET_CONNECT_ID="${walletConnectID}"`
     );
+    console.log('Environment variables have been added.');
     // // // Initialize the project.
     console.log('Installing dependencies...');
     const installPromise = new Promise((resolve, reject) => {
@@ -174,6 +179,7 @@ inquirer
         }
       });
     });
+    console.log('Dependencies have been installed.');
     installPromise.then(() => {
       // If the user selected the starter template:
       if (projectChoice === 'starter') {
@@ -566,7 +572,9 @@ export default function NFTInfo() {
         fs.writeFileSync(nftComponentPath, nftInfoComponent);
         console.log('Creating token transfer component...');
         fs.writeFileSync(nftMintComponentPath, nftMintComponent);
-        console.log('Your decentralized app is ready!');
+        console.log(
+          'Your decentralized app is ready!\ncd into your project and run your local server to start your project.'
+        );
       } else {
         // Code to run if neither of the conditions is met
       }
