@@ -1,6 +1,6 @@
 {
   "name": "create-new-dappd",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "author": "Peter Mazzocco",
   "description": "An easy way to create a new dapp project with a deployed smart contract.",
   "main": "index.js",

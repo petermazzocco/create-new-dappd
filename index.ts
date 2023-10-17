@@ -14,7 +14,7 @@ const CHOICES = fs.readdirSync(`${__dirname}/templates`);
 
 // Add a greeting message
 console.log(
-  'Welcome to create-new-dappd!\n The easiest way to create a new decentralized application.\n These templates require the following: A deployed smart contract, an Alchemy API key, an Etherscan API key, and a WalletConnect ID.\nFrom that, it will initialize a new template project with the necessary dependencies, environment variables, and create ready to use React Hooks based from wagmi.\n'
+  'Welcome to create-new-dappd!\n\nThe easiest way to create a new decentralized application.\n\nThese templates require the following: A deployed smart contract, an Alchemy API key, an Etherscan API key, and a WalletConnect ID.\n\nFrom that, it will initialize a new template project with the necessary dependencies, environment variables, and create ready to use React Hooks based from wagmi.\n\n'
 );
 await confirm({
   message:
@@ -37,6 +37,26 @@ const selectedNetworks = await checkbox({
       name: 'Optimism',
       value: 'optimism',
     },
+    {
+      name: 'Arbitrum',
+      value: 'arbitrum',
+    },
+    {
+      name: 'Base',
+      value: 'base',
+    },
+    {
+      name: 'Zora',
+      value: 'zora',
+    },
+    {
+      name: 'Gnosis',
+      value: 'gnosis',
+    },
+    {
+      name: 'Binance Smart Chain',
+      value: 'bsc',
+    },
     new Separator(),
     {
       name: 'Sepolia',
@@ -49,6 +69,30 @@ const selectedNetworks = await checkbox({
     {
       name: 'Mumbai',
       value: 'mumbai',
+    },
+    {
+      name: 'Optimism Sepolia',
+      value: 'optimismSepolia',
+    },
+    {
+      name: 'Arbitrum Sepolia',
+      value: 'arbitrumSepolia',
+    },
+    {
+      name: 'Base Sepolia',
+      value: 'baseSepolia',
+    },
+    {
+      name: 'Zora Testnet',
+      value: 'zoraTestnet',
+    },
+    {
+      name: 'Gnosis Chiado',
+      value: 'gnosisChiado',
+    },
+    {
+      name: 'Binance Testnet',
+      value: 'bscTestnet',
     },
   ],
 });
