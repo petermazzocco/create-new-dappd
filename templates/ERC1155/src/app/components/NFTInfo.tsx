@@ -2,10 +2,20 @@
 
 import useUriData from '../hooks/use-uri-data';
 import Mint from './Mint';
+import Attributes from './Attributes';
 import Socials from './Socials';
 
 export default function NFTInfo() {
+  /**
+   * This custom hook fetches the metadata from the URI and displays the information on the page.
+   * If you are experiencing issues with the metadata, it might be because your metadata isn't
+   * properly formatted to OpenSea's standards. Check out the OpenSea documentation and make sure
+   * your metadata is formatted correctly. Additionally, make sure your IPFS gateway is working properly.
+   */
   const { data, isLoading, isError, isSuccess } = useUriData({
+    //
+    // REPLACE WITH YOUR OWN ERC1155'S IPFS URI
+    //
     uri: 'https://ipfs.io/ipfs/Qmeji1kHmGJBVDKLRXRXG42viH3mog5rQY3kNWgusGgP8h',
   });
   return (
@@ -29,6 +39,7 @@ export default function NFTInfo() {
               <p className=" text-md font-thin">{data?.description}</p>
               <p className="text-lg">Total Supply: 10,0000</p>
               <hr className="border-1 border-white border-opacity-60" />
+              <Attributes attributes={data?.attributes} />
               <div className="pt-18">
                 <Socials />
               </div>

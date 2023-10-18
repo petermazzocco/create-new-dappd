@@ -603,6 +603,181 @@ export default function NFTInfo() {
         console.log(
           'Your decentralized app is ready!\ncd into your project and run your local server to start your project.'
         );
+      } else if (projectChoice === 'ERC1155') {
+        const nftComponentPath = `${newProjectPath}/src/app/components/NFTInfo.tsx`;
+        const nftMintComponentPath = `${newProjectPath}/src/app/components/Mint.tsx`;
+        console.log('Initializing wagmi cli...');
+        exec('npx wagmi init', (err, stdout, stderr) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          console.log(stdout);
+          console.log(stderr);
+
+          console.log('Creating wagmi config...');
+          fs.writeFileSync(
+            wagmiConfigPath,
+            `
+import { getDefaultConfig } from 'connectkit';
+import { createConfig } from 'wagmi';
+import { ${selectedNetworks} } from 'wagmi/chains';
+
+const WC_ID = process.env.WALLET_CONNECT_ID as string;
+const walletConnectProjectId = WC_ID;
+const chains = [${selectedNetworks}];
+
+export const config = createConfig(
+  getDefaultConfig({
+    autoConnect: true,
+    appName: '${projectName}',
+    walletConnectProjectId,
+    chains,
+  })
+);
+`
+          );
+
+          const wagmiCliConfig = `
+import { defineConfig } from '@wagmi/cli'
+import { etherscan, react } from '@wagmi/cli/plugins';
+import { ${selectedNetworks} } from 'wagmi/chains'
+
+export default defineConfig({
+  out: 'src/generated.ts',
+  plugins: [
+    etherscan({
+      // Remove the hardcoded API key before deploying to production
+      // Some users have experienced a bug with the Etherscan API key
+      apiKey: process.env.ETHERSCAN_API! || '${etherscanAPI}',
+      chainId: ${contractNetwork}.id,
+      contracts: [
+        {
+          name: '${contractName}',
+          address: {
+            [${contractNetwork}.id]: '${contractAddr}',
+          },
+        },
+      ],
+    }),
+    react(),
+  ],
+})`;
+
+          fs.writeFileSync(wagmiCliConfigPath, wagmiCliConfig);
+          console.log('Generating wagmi ERC721 hooks...');
+          exec('npx wagmi generate', (err, stdout, stderr) => {
+            if (err) {
+              console.error(err);
+              return;
+            }
+            console.log(stdout);
+            console.log(stderr);
+          });
+        });
+
+        const nftMintComponent = `
+'use client';
+
+/**
+ * If you are experiencing an error with the import, it might be because your "mint" function is
+ * named something other than "mint". Please double check and change the name of the function
+ * if this is the case.
+ */
+import { use${contractName}Mint, usePrepare${contractName}Mint } from '@src/generated';
+import { Toaster, toast } from 'sonner';
+
+export default function Mint() {
+  const { config } = usePrepare${contractName}Mint({
+    // REPLACE WITH YOUR ARGUMENTS
+    // If no arguments, you can remove.
+    args: ['0.01', '0x56C33325b71d97951C85397E1Bf32aF3bB45f74a', 1],
+  });
+  const {
+    write: mint,
+    isSuccess: minted,
+    isLoading: minting,
+    isError: failedMint,
+  } = use${contractName}Mint(config);
+  return (
+    <div className="w-full">
+      <Toaster richColors />
+      <button
+        onClick={() => mint?.()}
+        type="button"
+        //The button will be disabled if the arguments are incorrect.
+        disabled={!mint}
+        className="btn btn-sm btn-accent w-full"
+      >
+        Mint
+      </button>
+      {minting && toast('Minting...')}
+      {minted && toast.success('Minted!')}
+      {failedMint && toast.error('Failed to mint')}
+    </div>
+  );
+}`;
+        const nftInfoComponent = `
+'use client';
+
+import useUriData from '../hooks/use-uri-data';
+import Mint from './Mint';
+import Attributes from './Attributes';
+import Socials from './Socials';
+
+export default function NFTInfo() {
+  /**
+   * This custom hook fetches the metadata from the URI and displays the information on the page.
+   * If you are experiencing issues with the metadata, it might be because your metadata isn't
+   * properly formatted to OpenSea's standards. Check out the OpenSea documentation and make sure
+   * your metadata is formatted correctly. Additionally, make sure your IPFS gateway is working properly.
+   */
+  const { data, isLoading, isError, isSuccess } = useUriData({
+    //
+    // REPLACE WITH YOUR OWN ERC1155'S IPFS URI
+    //
+    uri: 'https://ipfs.io/ipfs/Qmeji1kHmGJBVDKLRXRXG42viH3mog5rQY3kNWgusGgP8h',
+  });
+  return (
+    <div className="grid mx-10">
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-10 h-fit">
+        {isLoading && <p>Loading...</p>}
+        {isError && <p>Error fetching data</p>}
+        {isSuccess && (
+          <>
+            <div className="col-span-1 justify-center place-items-center align-middle grid space-y-4">
+              <div className="bg-primary w-96 h-96 rounded-md place-items-center grid-flow-col justify-center grid">
+                {/* If image link is broken, check your IPFS gateway. */}
+                <img src={data?.image} className="w-96 h-96 rounded-md" />
+              </div>
+              <Mint />
+            </div>
+            <div className="col-span-1 justify-start text-white  align-middle space-y-4">
+              <h2 className=" text-3xl font-black">{data?.name}</h2>
+              <hr className="border-1 border-white border-opacity-60" />
+              <p className="text-xl font-semibold">0.00 ETH</p>
+              <p className=" text-md font-thin">{data?.description}</p>
+              <p className="text-lg">Total Supply: 10,0000</p>
+              <hr className="border-1 border-white border-opacity-60" />
+              <Attributes attributes={data?.attributes} />
+              <div className="pt-18">
+                <Socials />
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+        `;
+        console.log('Creating token info component...');
+        fs.writeFileSync(nftComponentPath, nftInfoComponent);
+        console.log('Creating token transfer component...');
+        fs.writeFileSync(nftMintComponentPath, nftMintComponent);
+        console.log(
+          'Your decentralized app is ready!\ncd into your project and run your local server to start your project.'
+        );
       } else {
         // Code to run if neither of the conditions is met
       }

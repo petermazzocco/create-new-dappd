@@ -12,7 +12,7 @@ function useUriData({ uri }) {
     async function fetchUri() {
       try {
         const res = await axios.get(uri);
-        setData(res.data as TMetadata); // Type assertion
+        setData(res.data as TMetadata);
         setIsSuccess(true);
       } catch (error) {
         console.error('Error fetching data:', error);
