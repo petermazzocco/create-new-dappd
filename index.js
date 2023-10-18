@@ -43,34 +43,6 @@ const selectedNetworks = await checkbox({
             name: 'Mainnet',
             value: 'mainnet',
         },
-        {
-            name: 'Polygon',
-            value: 'matic',
-        },
-        {
-            name: 'Optimism',
-            value: 'optimism',
-        },
-        {
-            name: 'Arbitrum',
-            value: 'arbitrum',
-        },
-        {
-            name: 'Base',
-            value: 'base',
-        },
-        {
-            name: 'Zora',
-            value: 'zora',
-        },
-        {
-            name: 'Gnosis',
-            value: 'gnosis',
-        },
-        {
-            name: 'Binance Smart Chain',
-            value: 'bsc',
-        },
         new Separator(),
         {
             name: 'Sepolia',
@@ -79,34 +51,6 @@ const selectedNetworks = await checkbox({
         {
             name: 'Goerli',
             value: 'goerli',
-        },
-        {
-            name: 'Mumbai',
-            value: 'mumbai',
-        },
-        {
-            name: 'Optimism Sepolia',
-            value: 'optimismSepolia',
-        },
-        {
-            name: 'Arbitrum Sepolia',
-            value: 'arbitrumSepolia',
-        },
-        {
-            name: 'Base Sepolia',
-            value: 'baseSepolia',
-        },
-        {
-            name: 'Zora Testnet',
-            value: 'zoraTestnet',
-        },
-        {
-            name: 'Gnosis Chiado',
-            value: 'gnosisChiado',
-        },
-        {
-            name: 'Binance Testnet',
-            value: 'bscTestnet',
         },
     ],
 });
@@ -238,8 +182,8 @@ inquirer
     });
     installPromise.then(() => {
         // If the user selected the starter template:
-        if (projectChoice === 'starter') {
-            // Code for the 'starter' case
+        if (projectChoice === 'CUSTOM') {
+            // Code for the 'CUSTOM' case
             console.log('Initializing wagmi cli...');
             exec('npx wagmi init', (err, stdout, stderr) => {
                 if (err) {
@@ -303,11 +247,19 @@ export default defineConfig({
             });
             // If the user selected the erc20 template:
         }
-        else if (projectChoice === 'erc20') {
+        else if (projectChoice === 'ERC20') {
             const tokenInfoComponentPath = `${newProjectPath}/src/app/components/TokenInfo.tsx`;
             const tokenTransferComponentPath = `${newProjectPath}/src/app/components/Transfer.tsx`;
-            console.log('Creating wagmi config...');
-            fs.writeFileSync(wagmiConfigPath, `
+            console.log('Initializing wagmi cli...');
+            exec('npx wagmi init', (err, stdout, stderr) => {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+                console.log(stdout);
+                console.log(stderr);
+                console.log('Creating wagmi config...');
+                fs.writeFileSync(wagmiConfigPath, `
 import { getDefaultConfig } from 'connectkit';
 import { createConfig } from 'wagmi';
 import { ${selectedNetworks} } from 'wagmi/chains';
@@ -325,7 +277,7 @@ export const config = createConfig(
   })
 );
 `);
-            const wagmiCliConfig = `
+                const wagmiCliConfig = `
 import { defineConfig } from '@wagmi/cli'
 import { etherscan, react } from '@wagmi/cli/plugins';
 import { erc20ABI } from 'wagmi';
@@ -355,16 +307,18 @@ export default defineConfig({
     react(),
   ],
 })`;
-            fs.writeFileSync(wagmiCliConfigPath, wagmiCliConfig);
-            console.log('Generating wagmi ERC20 hooks...');
-            exec('npx wagmi generate', (err, stdout, stderr) => {
-                if (err) {
-                    console.error(err);
-                    return;
-                }
-                console.log(stdout);
-                console.log(stderr);
+                fs.writeFileSync(wagmiCliConfigPath, wagmiCliConfig);
+                console.log('Generating wagmi ERC20 hooks...');
+                exec('npx wagmi generate', (err, stdout, stderr) => {
+                    if (err) {
+                        console.error(err);
+                        return;
+                    }
+                    console.log(stdout);
+                    console.log(stderr);
+                });
             });
+            // TOKEN COMPONENTS
             const tokenInfoComponent = `
 'use client';
 
@@ -455,11 +409,19 @@ export default function Transfer() {
             fs.writeFileSync(tokenTransferComponentPath, tokenTransferComponent);
             console.log('Your decentralized app is ready!');
         }
-        else if (projectChoice === 'erc721') {
+        else if (projectChoice === 'ERC721') {
             const nftComponentPath = `${newProjectPath}/src/app/components/NFTInfo.tsx`;
             const nftMintComponentPath = `${newProjectPath}/src/app/components/Mint.tsx`;
-            console.log('Creating wagmi config...');
-            fs.writeFileSync(wagmiConfigPath, `
+            console.log('Initializing wagmi cli...');
+            exec('npx wagmi init', (err, stdout, stderr) => {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+                console.log(stdout);
+                console.log(stderr);
+                console.log('Creating wagmi config...');
+                fs.writeFileSync(wagmiConfigPath, `
 import { getDefaultConfig } from 'connectkit';
 import { createConfig } from 'wagmi';
 import { ${selectedNetworks} } from 'wagmi/chains';
@@ -477,7 +439,7 @@ export const config = createConfig(
   })
 );
 `);
-            const wagmiCliConfig = `
+                const wagmiCliConfig = `
 import { defineConfig } from '@wagmi/cli'
 import { etherscan, react } from '@wagmi/cli/plugins';
 import { erc20ABI } from 'wagmi';
@@ -501,15 +463,16 @@ export default defineConfig({
     react(),
   ],
 })`;
-            fs.writeFileSync(wagmiCliConfigPath, wagmiCliConfig);
-            console.log('Generating wagmi ERC20 hooks...');
-            exec('npx wagmi generate', (err, stdout, stderr) => {
-                if (err) {
-                    console.error(err);
-                    return;
-                }
-                console.log(stdout);
-                console.log(stderr);
+                fs.writeFileSync(wagmiCliConfigPath, wagmiCliConfig);
+                console.log('Generating wagmi ERC20 hooks...');
+                exec('npx wagmi generate', (err, stdout, stderr) => {
+                    if (err) {
+                        console.error(err);
+                        return;
+                    }
+                    console.log(stdout);
+                    console.log(stderr);
+                });
             });
             const nftMintComponent = `
 'use client';
