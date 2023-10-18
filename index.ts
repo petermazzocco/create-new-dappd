@@ -226,7 +226,9 @@ export default defineConfig({
   out: 'src/generated.ts',
   plugins: [
     etherscan({
-      apiKey: process.env.ETHERSCAN_API!,
+      // Remove the hardcoded API key before deploying to production
+      // Some users have experienced a bug with the Etherscan API key
+      apiKey: process.env.ETHERSCAN_API! || '${etherscanAPI}',
       chainId: ${contractNetwork}.id,
       contracts: [
         {
@@ -305,7 +307,9 @@ export default defineConfig({
   ],
   plugins: [
     etherscan({
-      apiKey: process.env.ETHERSCAN_API!,
+      // Remove the hardcoded API key before deploying to production
+      // Some users have experienced a bug with the Etherscan API key
+      apiKey: process.env.ETHERSCAN_API! || '${etherscanAPI}',
       chainId: ${contractNetwork}.id,
       contracts: [
         {
@@ -467,7 +471,9 @@ export default defineConfig({
   out: 'src/generated.ts',
   plugins: [
     etherscan({
-      apiKey: process.env.ETHERSCAN_API!,
+      // Remove the hardcoded API key before deploying to production
+      // Some users have experienced a bug with the Etherscan API key
+      apiKey: process.env.ETHERSCAN_API! || '${etherscanAPI}',
       chainId: ${contractNetwork}.id,
       contracts: [
         {
@@ -483,7 +489,7 @@ export default defineConfig({
 })`;
 
           fs.writeFileSync(wagmiCliConfigPath, wagmiCliConfig);
-          console.log('Generating wagmi ERC20 hooks...');
+          console.log('Generating wagmi ERC721 hooks...');
           exec('npx wagmi generate', (err, stdout, stderr) => {
             if (err) {
               console.error(err);
