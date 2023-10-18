@@ -383,11 +383,11 @@ export default function Transfer() {
     setAmount(weiAmount);
   };
 
-  const { config } = usePrepareTestTokenTransfer({
+  const { config } = usePrepare${contractName}Transfer({
     args: [toAddr, amount],
   });
   const { write, isError, isSuccess, isLoading } =
-    useTestTokenTransfer(config);
+    use${contractName}Transfer(config);
 
   return (
     <div className="grid justify-center space-y-4">
@@ -506,7 +506,7 @@ import { use${contractName}Mint, usePrepare${contractName}Mint } from '@src/gene
 import { Toaster, toast } from 'sonner';
 
 export default function Mint() {
-  const { config } = use${contractName}Mint({
+  const { config } = usePrepare${contractName}Mint({
     // REPLACE WITH YOUR ARGUMENTS
     // If no arguments, you can remove.
     args: ['0.01', '0x56C33325b71d97951C85397E1Bf32aF3bB45f74a', 1],

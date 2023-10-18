@@ -180,6 +180,7 @@ inquirer
             }
         });
     });
+    // SET UP WAGMI
     installPromise.then(() => {
         // If the user selected the starter template:
         if (projectChoice === 'CUSTOM') {
@@ -368,11 +369,11 @@ export default function Transfer() {
     setAmount(weiAmount);
   };
 
-  const { config } = usePrepareTestTokenTransfer({
+  const { config } = usePrepare${contractName}Transfer({
     args: [toAddr, amount],
   });
   const { write, isError, isSuccess, isLoading } =
-    useTestTokenTransfer(config);
+    use${contractName}Transfer(config);
 
   return (
     <div className="grid justify-center space-y-4">
@@ -442,7 +443,6 @@ export const config = createConfig(
                 const wagmiCliConfig = `
 import { defineConfig } from '@wagmi/cli'
 import { etherscan, react } from '@wagmi/cli/plugins';
-import { erc20ABI } from 'wagmi';
 import { ${selectedNetworks} } from 'wagmi/chains'
 
 export default defineConfig({
@@ -486,7 +486,7 @@ import { use${contractName}Mint, usePrepare${contractName}Mint } from '@src/gene
 import { Toaster, toast } from 'sonner';
 
 export default function Mint() {
-  const { config } = use${contractName}Mint({
+  const { config } = usePrepare${contractName}Mint({
     // REPLACE WITH YOUR ARGUMENTS
     // If no arguments, you can remove.
     args: ['0.01', '0x56C33325b71d97951C85397E1Bf32aF3bB45f74a', 1],
