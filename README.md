@@ -24,9 +24,11 @@ To create a new Dapp project, follow these steps:
 - **Select the networks:** Choose the blockchain networks you want to support (e.g., mainnet, polygon, optimism, and more to come.).
 
 - **Template:** Select a template for your Dapp project. Available choices are:
+
   - [CUSTOM]: RECOMMENDED. The simple basic template that allows you to add any form of contract.
+  - [ERC1155]: A simple minting page that is pre-configured to allow you to mint a deployed ERC1155 token. Of Note: the functions of the template follow the ERC1155 OpenZeppelin standard and use function naming syntax like "mint", "uri", and more. If your functions are named something else, you will encounter import errors initially. Simply updating those values will fix the error.
   - [ERC20]: Add yours or any other ERC20 compatible contract address and name, and it will autogenerate hooks based off the ABI and display token info initially.
-  - [ERC721]: A simple minting page that is pre-configured to allow you to mint a deployed ERC721 token. Of Note: the functions of the template follow the OpenZeppelin standard and use function naming syntax like "mint". If you're mint function is named something else, you will encouter import errors initially. Simply updating those values will fix the error.
+  - [ERC721]: A simple minting page that is pre-configured to allow you to mint a deployed ERC721 token. Of Note: the functions of the template follow the ERC721 OpenZeppelin standard and use function naming syntax like "mint", "name", "symbol", and more. If your functions is named something else, you will encounter import errors initially. Simply updating those values will fix the error.
 
 - **Project name:** Enter a name for your project. The name can only include letters, numbers, underscores, and hyphens.
 
