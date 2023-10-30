@@ -62,6 +62,12 @@ To start your local server, run the following command:
 npm run dev
 ```
 
+Or, again, if you're cool and using Bun:
+
+```sh
+bunx --bun run dev
+```
+
 If for some reason you see a blank page, just refresh your browser and the components will populate.
 
 ## Additional Information
