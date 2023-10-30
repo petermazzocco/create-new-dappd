@@ -19,6 +19,12 @@ To create a new Dapp project, follow these steps:
    npx create-new-dappd
    ```
 
+   Or if you're cool and using Bun:
+
+   ```sh
+   bunx create-new-dappd
+   ```
+
    The script will guide you through a series of prompts to set up your project. Here's what you can expect:
 
 - **Select the networks:** Choose the blockchain networks you want to support (e.g., mainnet, polygon, optimism, and more to come.).
